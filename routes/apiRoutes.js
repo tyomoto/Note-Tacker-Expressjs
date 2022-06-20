@@ -30,33 +30,28 @@ app.post('/notes', (req, res) => {
     res.json(database);
   })
   
-//
+// Working delete function for selected notes
+app.delete('/notes/:id', (req, res) => {
+    const notesArrayKept = [];
 
-// app.delete('/notes/:id', (req, res) => {
-//     const notesArrayKept = [];
+    // Loop to check each id of the database
+    for (let i = 0; i < database.length; i++ ) {
+        // if the note that was seleceted to delete has its id match the requested id, it will be removed from the array
+        if (parseInt(database[i].id) === req.params.id){
+            console.log(`This note has been deleted: ${noteId}`);
+        }else{
+            // if it wasn't deleted, push it to the array
+            notesArrayKept.push(database[i]);
+        };
+        database = notesArrayKept;
+        // write the json file with the new array MINUS the note selected to delete
+        fs.writeFile('./db/db.json', JSON.stringify(database), (err, res) => {
+                if (err) throw err;
+            });
+        res.sendFile(path.join(__dirname, 'public/notes.html'));
+            
+        };
 
-//     fs.readFile('./db.db.json', 'utf8', (err, data) => {
-//         if (err) {
-//             console.error(err); 
-//         } else {
-//             notesData = JSON.parse(data);
-//             for (let i = 0; i < notesData.length; i++ ) {
-//                 let noteId = notesData[i].id;
-//                 if (noteId === req.parms.id){
-//                     console.log(`This note has been deleted: ${noteId}`);
-//                 }else{
-//                     notesArrayKept.push(notesData[i])
-//                 };
-//             fs.writeFile('./db/db.json', JSON.stringify(notesArrayKept), (err, res) => {
-//                 if (err) throw err;
-//             });
-//             res.sendFile(path.join(__dirname, 'public/notes.html'));
-//             };
-//         };
-
-        
-//     });
-
-// });
+});
 
 module.exports = app;
